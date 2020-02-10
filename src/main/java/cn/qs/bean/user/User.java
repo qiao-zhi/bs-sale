@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 
 import cn.qs.bean.AbstractSequenceEntity;
 
+//remark1用作区域，remark2用作薪水
 @Entity
 public class User extends AbstractSequenceEntity {
 

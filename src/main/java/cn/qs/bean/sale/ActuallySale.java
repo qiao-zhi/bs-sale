@@ -1,7 +1,9 @@
 package cn.qs.bean.sale;
 
-import cn.qs.bean.AbstractSequenceEntity;
+import javax.persistence.Entity;
 
+import cn.qs.bean.AbstractSequenceEntity;
+@Entity
 public class ActuallySale extends AbstractSequenceEntity {
 
 	/**
@@ -15,7 +17,7 @@ public class ActuallySale extends AbstractSequenceEntity {
 	private String salefullname;
 
 	/**
-	 * 预计销售金额
+	 * 销售金额
 	 */
 	private String saleamount;
 

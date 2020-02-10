@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.qs.mapper.sale.custom.ActuallySaleCustomMapper">
+
+	<select id="listByCondition" resultType="cn.qs.bean.sale.ActuallySale"
+		parameterType="map">
+	select * from 	actuallysale 
+	<where>
+		<if test="saleusername != null and saleusername != ''">
+			and saleusername=#{saleusername}
+		</if>
+		<if test="yearnum != null and yearnum != ''">
+			and yearnum=#{yearnum}
+		</if>
+		<if test="monthnum != null and monthnum != ''">
+			and monthnum=#{monthnum}
+		</if>
+		<if test="saleusernames != null">
+			and saleusername in 
+			<foreach collection="saleusernames" item="saleusername_tmp" separator="," open="(" close=")">
+				#{saleusername_tmp}
+			</foreach>
+		</if>
+	</where>
+	</select>
+
+</mapper>

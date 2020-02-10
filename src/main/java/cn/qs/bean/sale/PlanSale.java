@@ -1,7 +1,9 @@
 package cn.qs.bean.sale;
 
-import cn.qs.bean.AbstractSequenceEntity;
+import javax.persistence.Entity;
 
+import cn.qs.bean.AbstractSequenceEntity;
+@Entity
 public class PlanSale extends AbstractSequenceEntity {
 
 	/**

@@ -112,4 +112,13 @@ public class AbstractEntity {
 	public Object getProperty(String key) {
 		return propertiesMap.get(key);
 	}
+
+	public void setProperties(String properties) {
+		this.properties = properties;
+	}
+
+	public void setPropertiesMap(Map<String, Object> propertiesMap) {
+		this.propertiesMap = propertiesMap;
+	}
+
 }

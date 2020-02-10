@@ -2,7 +2,11 @@ package cn.qs.utils.system;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +20,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import cn.qs.bean.user.User;
+import cn.qs.service.user.UserService;
+import cn.qs.utils.DefaultValue;
 import cn.qs.utils.UUIDUtils;
 import cn.qs.utils.file.PropertiesFileUtils;
 
@@ -83,6 +89,37 @@ public class MySystemUtils {
 
 	public static String getLoginUsername() {
 		return getLoginUser().getUsername();
+	}
+
+	// 获取用户可以查看的数据(销售角色看自己，部门经理看同部门，总监和系统管理员看所有)
+	public static List<String> getLoginUserCanSeeUsernames() {
+		List<String> usernames = new ArrayList<>();
+
+		String roles = getLoginUser().getRoles();
+		if (DefaultValue.ROLE_SALE.equals(roles)) {
+			usernames.add(getLoginUsername());
+			return usernames;
+		}
+
+		UserService userService = SpringBootUtils.getBean(UserService.class);
+		if (DefaultValue.ROLE_LEADER.equals(roles)) {
+			// 获取到区域之后获取信息
+			String remark1 = getLoginUser().getRemark1();
+			Map<String, Object> condition = new HashMap<String, Object>();
+			condition.put("remark1", remark1);
+			List<User> sameAreaUsers = userService.listByCondition(condition);
+			for (User u : sameAreaUsers) {
+				usernames.add(u.getUsername());
+			}
+
+			return usernames;
+		}
+
+		List<User> allUsers = userService.findAllUser();
+		for (User u : allUsers) {
+			usernames.add(u.getUsername());
+		}
+		return usernames;
 	}
 
 	public static File getTmpFile() {

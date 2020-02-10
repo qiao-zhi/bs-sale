@@ -21,6 +21,8 @@ import com.github.pagehelper.PageInfo;
 import cn.qs.service.BaseService;
 import cn.qs.utils.DefaultValue;
 import cn.qs.utils.JSONResultUtil;
+import cn.qs.utils.SaleUtils;
+import cn.qs.utils.system.MySystemUtils;
 
 /**
  * 所以控制层的基类
@@ -57,7 +59,12 @@ public abstract class AbstractController<T, E extends Serializable> {
 	}
 
 	@RequestMapping("add")
-	public String add() {
+	public String add(ModelMap map) {
+		map.put("username", MySystemUtils.getLoginUsername());
+		map.put("fullname", MySystemUtils.getLoginUser().getFullname());
+		
+		SaleUtils.addYearsAndMonths(map);
+
 		return getViewPath("add");
 	}
 
@@ -69,7 +76,8 @@ public abstract class AbstractController<T, E extends Serializable> {
 	}
 
 	@RequestMapping("list")
-	public String list() {
+	public String list(ModelMap map) {
+		SaleUtils.addYearsAndMonths(map);
 		return getViewPath("list");
 	}
 
@@ -102,7 +110,7 @@ public abstract class AbstractController<T, E extends Serializable> {
 		} catch (Exception e) {
 			LOGGER.error("SpringDataJPA page error, viewbasePath : {}", getViewBasePath(), e);
 		}
-		
+
 		System.out.println(JSONObject.toJSONString(pages));
 		return pages;
 	}
@@ -131,6 +139,10 @@ public abstract class AbstractController<T, E extends Serializable> {
 	public String update(E id, ModelMap map, HttpServletRequest request) {
 		T bean = getBaseService().findById(id);
 		map.addAttribute("bean", bean);
+
+		map.put("years", SaleUtils.listYears());
+		map.put("months", SaleUtils.listMonths());
+
 		return getViewPath("update");
 	}
 
