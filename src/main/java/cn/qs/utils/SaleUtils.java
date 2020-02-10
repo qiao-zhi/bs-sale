@@ -9,6 +9,12 @@ import java.util.Map;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.ui.ModelMap;
 
+import cn.qs.bean.sale.ActuallySale;
+import cn.qs.bean.sale.PlanSale;
+import cn.qs.service.sale.ActuallySaleService;
+import cn.qs.service.sale.PlanSaleService;
+import cn.qs.utils.system.SpringBootUtils;
+
 /**
  * 专用工具类
  * 
@@ -60,7 +66,21 @@ public class SaleUtils {
 		return result;
 	}
 
+	/**
+	 * 个人业绩统计
+	 * 
+	 * @param condition
+	 * @return
+	 */
 	public static Map<String, Object> listPersonalCount(Map condition) {
+		// 根据年度和季度查到预算表，并且查到实际销售表
+		ActuallySaleService actuallySaleService = SpringBootUtils.getBean(ActuallySaleService.class);
+		PlanSaleService planSaleService = SpringBootUtils.getBean(PlanSaleService.class);
+		List<ActuallySale> listByCondition = actuallySaleService.listByCondition(condition);
+		List<PlanSale> listByCondition2 = planSaleService.listByCondition(condition);
+
+		// 双层遍历做处理
+		
 		return null;
 	}
 }

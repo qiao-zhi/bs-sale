@@ -44,6 +44,7 @@ public class SaleCountController {
 	@ResponseBody
 	public JSONResultUtil<Map<String, Object>> listPersonalCount(@RequestParam Map condition,
 			HttpServletRequest request) {
+		System.out.println(condition);
 		Map<String, Object> result = SaleUtils.listPersonalCount(condition);
 		return new JSONResultUtil<Map<String, Object>>(true, "ok", result);
 	}
