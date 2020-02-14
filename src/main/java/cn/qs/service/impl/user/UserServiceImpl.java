@@ -15,6 +15,7 @@ import cn.qs.bean.user.User;
 import cn.qs.bean.user.UserExample;
 import cn.qs.bean.user.UserExample.Criteria;
 import cn.qs.mapper.user.UserMapper;
+import cn.qs.mapper.user.custom.UserCustomMapper;
 import cn.qs.service.user.UserService;
 import cn.qs.utils.securty.MD5Utils;
 
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private UserCustomMapper userCustomMapper;
 
 	public List<User> findAllUser() {
 		UserExample userExample = new UserExample();
@@ -106,5 +110,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Page<User> pageByCondition(Map condition) {
 		return null;
+	}
+
+	@Override
+	public Float getGroupSalarys(List<String> userSameAreaUsernames) {
+		return userCustomMapper.getGroupSalarys(userSameAreaUsernames);
 	}
 }

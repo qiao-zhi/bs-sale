@@ -27,8 +27,8 @@ function showTable(pageInfo) {
             +'<td>'+replaceNull(beans[i].yearnum)+'</td>'
             +'<td>'+replaceNull(beans[i].monthnum)+'</td>'
             +'<td>'+replaceNull(beans[i].saleamount)+'</td>'
-            +'<td>'+replaceNull(beans[i].socialamount)+'</td>'
             +'<td>'+replaceNull(beans[i].awayamount)+'</td>'
+            +'<td>'+replaceNull(beans[i].socialamount)+'</td>'
             +'<td>'+replaceNull(beans[i].ratio)+'</td>'
             +'<td>';
 	        if(isAdmin()){

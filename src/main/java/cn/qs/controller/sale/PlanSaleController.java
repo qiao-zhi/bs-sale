@@ -87,6 +87,8 @@ public class PlanSaleController extends AbstractSequenceController<PlanSale> {
 			LOGGER.error("getUsers error！", e);
 		}
 		PageInfo<PlanSale> pageInfo = new PageInfo<PlanSale>(beans);
+		pageInfo.setPageSize(pageSize);
+		
 		return pageInfo;
 	}
 

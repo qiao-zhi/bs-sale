@@ -34,4 +34,14 @@ public class PlanSaleServiceImpl extends AbastractBaseSequenceServiceImpl<PlanSa
 		condition.put("saleusernames", MySystemUtils.getLoginUserCanSeeUsernames());
 		return planSaleCustomMapper.listByCondition(condition);
 	}
+
+	@Override
+	public List<Map<String, Object>> listPlanGroupSaleAmount(List<String> userSameAreaUsernames) {
+		return planSaleCustomMapper.listPlanGroupSaleAmount(userSameAreaUsernames);
+	}
+
+	@Override
+	public Map<String, Object> getLastMonthRemain(Map<String, Object> tmpCondition) {
+		return planSaleCustomMapper.getLastMonthRemain(tmpCondition);
+	}
 }

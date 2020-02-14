@@ -62,6 +62,7 @@ public class ActuallySaleController extends AbstractSequenceController<ActuallyS
 			LOGGER.error("getUsers error！", e);
 		}
 		PageInfo<ActuallySale> pageInfo = new PageInfo<ActuallySale>(beans);
+		pageInfo.setPageSize(pageSize);
 		return pageInfo;
 	}
 

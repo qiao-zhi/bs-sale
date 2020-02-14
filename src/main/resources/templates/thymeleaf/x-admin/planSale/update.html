@@ -71,7 +71,7 @@
           
           <div class="layui-form-item">
               <label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>销售金额
+                  <span class="x-red">*</span>销售目标
               </label>
               <div class="layui-input-inline">
                   <input type="text" id="L_name" th:field="${bean.saleamount}" lay-verify="required"
@@ -81,20 +81,20 @@
           
           <div class="layui-form-item">
               <label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>应酬金额
-              </label>
-              <div class="layui-input-inline">
-                  <input type="text" id="L_name" th:field="${bean.socialamount}" lay-verify="required"
-                  autocomplete="off" class="layui-input"/>
-              </div>
-          </div>
-          
-          <div class="layui-form-item">
-              <label for="L_email" class="layui-form-label">
-                  <span class="x-red">*</span>出差金额
+                  <span class="x-red">*</span>差旅预算
               </label>
               <div class="layui-input-inline">
                   <input type="text" id="L_name" th:field="${bean.awayamount}" lay-verify="required"
+                  autocomplete="off" class="layui-input"/>
+              </div>
+          </div>  
+          
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>应酬预算
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_name" th:field="${bean.socialamount}" lay-verify="required"
                   autocomplete="off" class="layui-input"/>
               </div>
           </div>

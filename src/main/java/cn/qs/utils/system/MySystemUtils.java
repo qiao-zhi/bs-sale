@@ -55,7 +55,7 @@ public class MySystemUtils {
 	public static final String settings_file_path = SystemUtils.getUserDir().getAbsolutePath() + "/settings.properties";
 
 	public static String getProductName() {
-		return getProperty("productName", "管理网");
+		return getProperty("productName", "销售业绩");
 	}
 
 	public static String getProperty(String key) {
@@ -119,6 +119,27 @@ public class MySystemUtils {
 		for (User u : allUsers) {
 			usernames.add(u.getUsername());
 		}
+		return usernames;
+	}
+
+	public static List<String> getUserSameAreaUsernames(String username) {
+		List<String> usernames = new ArrayList<>();
+
+		UserService userService = SpringBootUtils.getBean(UserService.class);
+		User findUserByUsername = userService.findUserByUsername(username);
+		if (findUserByUsername == null) {
+			return usernames;
+		}
+
+		// 获取到区域之后获取信息
+		String remark1 = findUserByUsername.getRemark1();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("remark1", remark1);
+		List<User> sameAreaUsers = userService.listByCondition(condition);
+		for (User u : sameAreaUsers) {
+			usernames.add(u.getUsername());
+		}
+
 		return usernames;
 	}
 

@@ -27,8 +27,8 @@ function showTable(pageInfo) {
             +'<td>'+replaceNull(beans[i].yearnum)+'</td>'
             +'<td>'+replaceNull(beans[i].monthnum)+'</td>'
             +'<td>'+replaceNull(beans[i].saleamount)+'</td>'
-            +'<td>'+replaceNull(beans[i].socialamount)+'</td>'
             +'<td>'+replaceNull(beans[i].awayamount)+'</td>'
+            +'<td>'+replaceNull(beans[i].socialamount)+'</td>'
             +'<td>';
 	        if(isAdmin()){
 	        	tr+='<a href=javascript:void(0) title="修改" onclick="update(\''+beans[i].id+'\', 800, 400)"><i class="layui-icon">&#xe642;</i></a>'

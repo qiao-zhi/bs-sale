@@ -35,4 +35,14 @@ public class ActuallySaleServiceImpl extends AbastractBaseSequenceServiceImpl<Ac
 		condition.put("saleusernames", MySystemUtils.getLoginUserCanSeeUsernames());
 		return actuallySaleCustomMapper.listByCondition(condition);
 	}
+
+	@Override
+	public List<Map<String, Object>> listActuallyGroupSaleAmount(List<String> userSameAreaUsernames) {
+		return actuallySaleCustomMapper.listActuallyGroupSaleAmount(userSameAreaUsernames);
+	}
+
+	@Override
+	public Map<String, Object> getLastMonthRemain(Map<String, Object> tmpCondition) {
+		return actuallySaleCustomMapper.getLastMonthRemain(tmpCondition);
+	}
 }

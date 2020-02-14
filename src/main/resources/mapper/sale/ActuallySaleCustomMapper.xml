@@ -23,5 +23,29 @@
 		</if>
 	</where>
 	</select>
+	
+	<select id="listActuallyGroupSaleAmount" resultType="map" parameterType="java.util.List">
+		select yearnum,monthnum,sum(saleamount) as saleamounts,SUM(awayamount)  AS  awayamounts, sum(socialamount) as socialamounts  from actuallysale WHERE saleusername IN 
+        <foreach collection="list" item="saleusername" separator="," open="("
+            close=")">
+            #{saleusername}
+        </foreach>
+		 group by yearnum,monthnum 
+	</select>
+	
+	<select id="getLastMonthRemain" resultType="map" parameterType="map">
+		select sum(socialamount) as socialamounts, sum(awayamount) as awayamounts  from actuallysale 
+		<where>
+			<if test="saleusername != null and saleusername != ''">
+				and saleusername=#{saleusername}
+			</if>
+			<if test="yearnum != null and yearnum != ''">
+				and yearnum=#{yearnum}
+			</if>
+			<if test="monthnum != null and monthnum != ''">
+				and CONVERT(monthnum,UNSIGNED) &lt; CONVERT(#{monthnum}, UNSIGNED)
+			</if>
+		</where>
+	</select>
 
 </mapper>

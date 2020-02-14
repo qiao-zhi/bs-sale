@@ -1,5 +1,6 @@
 package cn.qs.controller.sale;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,11 +43,11 @@ public class SaleCountController {
 	 */
 	@RequestMapping("listPersonalCount")
 	@ResponseBody
-	public JSONResultUtil<Map<String, Object>> listPersonalCount(@RequestParam Map condition,
+	public JSONResultUtil<List<Map<String, Object>>> listPersonalCount(@RequestParam Map condition,
 			HttpServletRequest request) {
 		System.out.println(condition);
-		Map<String, Object> result = SaleUtils.listPersonalCount(condition);
-		return new JSONResultUtil<Map<String, Object>>(true, "ok", result);
+		List<Map<String, Object>> result = SaleUtils.listPersonalCount(condition);
+		return new JSONResultUtil<List<Map<String, Object>>>(true, "ok", result);
 	}
 
 	@RequestMapping("groupCount")
