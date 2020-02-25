@@ -70,7 +70,7 @@ public class UserController extends AbstractSequenceController<User> {
 		map.addAttribute("user", user);
 
 		// 添加所属的区域
-		String areas = MySystemUtils.getProperty("areas", "华北,华南,华中");
+		String areas = MySystemUtils.getProperty("areas", "华北,华南,华东");
 		String[] split = areas.split(",|，");
 		map.addAttribute("areas", split);
 

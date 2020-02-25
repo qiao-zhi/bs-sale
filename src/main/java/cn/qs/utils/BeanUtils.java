@@ -128,36 +128,39 @@ public class BeanUtils {
 			PropertyDescriptor[] destBeanInfoPropertyDescriptors = destBeanInfo.getPropertyDescriptors();
 
 			for (PropertyDescriptor propertyDescriptor : destBeanInfoPropertyDescriptors) {
-				// 获取属性名
-				String key = propertyDescriptor.getName();
-				if (ArrayUtils.contains(excludeFieldNames, key)) {
-					continue;
-				}
-
-				// 获取该属性的值
-				Method readMethod = propertyDescriptor.getReadMethod();
-
-				// 如果源对象没有对应属性就跳过
-				Object srcValue = null;
 				try {
-					srcValue = readMethod.invoke(origin);
-				} catch (Exception ignored) {
-					// ignored
-					continue;
-				}
+					// 获取属性名
+					String key = propertyDescriptor.getName();
+					if (ArrayUtils.contains(excludeFieldNames, key)) {
+						continue;
+					}
 
-				// 如果源对象的值null且null不设置的时候跳过
-				if (srcValue == null && !setNull) {
-					continue;
-				}
+					// 获取该属性的值
+					Method readMethod = propertyDescriptor.getReadMethod();
 
-				// 获取setter方法修改属性
-				Method writeMethod = propertyDescriptor.getWriteMethod();
-				if (writeMethod == null) {
-					continue;
-				}
+					// 如果源对象没有对应属性就跳过
+					Object srcValue = null;
+					try {
+						srcValue = readMethod.invoke(origin);
+					} catch (Exception ignored) {
+						// ignored
+						continue;
+					}
 
-				writeMethod.invoke(dest, srcValue);
+					// 如果源对象的值null且null不设置的时候跳过
+					if (srcValue == null && !setNull) {
+						continue;
+					}
+
+					// 获取setter方法修改属性
+					Method writeMethod = propertyDescriptor.getWriteMethod();
+					if (writeMethod == null) {
+						continue;
+					}
+					writeMethod.invoke(dest, srcValue);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (Exception ignored) {
 			// ignored

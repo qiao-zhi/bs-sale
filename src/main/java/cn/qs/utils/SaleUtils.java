@@ -19,6 +19,7 @@ import cn.qs.bean.user.User;
 import cn.qs.service.sale.ActuallySaleService;
 import cn.qs.service.sale.PlanSaleService;
 import cn.qs.service.user.UserService;
+import cn.qs.utils.format.MyNumberUtils;
 import cn.qs.utils.system.MySystemUtils;
 import cn.qs.utils.system.SpringBootUtils;
 
@@ -117,8 +118,9 @@ public class SaleUtils {
 			record.put("planSocialAmount", planSale.getSocialamount());
 			record.put("planAwayAmount", planSale.getAwayamount());
 			// 团队预计销售
-			Object planGroupSaleAmount = getPlanGroupSaleAmount(planSale, planSaleService);
-			record.put("planGroupSaleAmount", planGroupSaleAmount);
+			Float planGroupSaleAmount = getPlanGroupSaleAmount(planSale, planSaleService);
+			// record.put("planGroupSaleAmount", planGroupSaleAmount);
+			record.put("planGroupSaleAmount", MyNumberUtils.toFixedDecimal(planGroupSaleAmount, 2));
 
 			Map<String, Object> tmpCondition = new HashMap<>();
 			tmpCondition.put("saleusername", planSale.getSaleusername());
@@ -142,8 +144,12 @@ public class SaleUtils {
 				lastMonthRemainSocialAmount = planSocialAmounts - actuallySocialAmounts;
 				lastMonthRemainAwayAmount = planAwayAmounts - actuallyAwayAmounts;
 			}
-			record.put("lastMonthRemainSocialAmount", lastMonthRemainSocialAmount);
-			record.put("lastMonthRemainAwayAmount", lastMonthRemainAwayAmount);
+			// record.put("lastMonthRemainSocialAmount",
+			// lastMonthRemainSocialAmount);
+			// record.put("lastMonthRemainAwayAmount",
+			// lastMonthRemainAwayAmount);
+			record.put("lastMonthRemainSocialAmount", MyNumberUtils.toFixedDecimal(lastMonthRemainSocialAmount, 2));
+			record.put("lastMonthRemainAwayAmount", MyNumberUtils.toFixedDecimal(lastMonthRemainAwayAmount, 2));
 
 			// 获取实际销售信息
 			List<ActuallySale> actuallySales = actuallySaleService.listByCondition(tmpCondition);
@@ -163,7 +169,7 @@ public class SaleUtils {
 			if (!planGroupSaleAmountFloat.equals(0.0)) {
 				groupSaleRatio = actuallyGroupSaleAmountFloat / planGroupSaleAmountFloat;
 			}
-			record.put("groupSaleRatio", groupSaleRatio);
+			record.put("groupSaleRatio", MyNumberUtils.toFixedDecimalWithPercent(groupSaleRatio, 2));
 
 			// 计算团队成本：工资 * 1.15
 			// Float awayAndSocialAmount =
@@ -176,27 +182,35 @@ public class SaleUtils {
 			Float groupPerformanceRatio = getGroupPerformanceRatio(groupSaleRatio);
 			// 团队绩效金额(实际团队销售*团队绩效系数-团队成本)
 			Float groupPerformance = actuallyGroupSaleAmountFloat * groupPerformanceRatio - groupCosts;
-			record.put("groupPerformance", groupPerformance);
+			// record.put("groupPerformance", groupPerformance);
+			record.put("groupPerformance", MyNumberUtils.toFixedDecimal(groupPerformance, 2));
 
 			// 个人绩效金额（实际员工销售/实际团队销售*团队绩效金额*员工销售系数）
 			Float selaActuallySaleAmount = NumberUtils.toFloat(actuallySale.getSaleamount());
 			Float selfPerformance = selaActuallySaleAmount / actuallyGroupSaleAmountFloat * groupPerformance
 					* NumberUtils.toFloat(planSale.getRatio());
-			record.put("selfPerformance", selfPerformance);
+			// record.put("selfPerformance", selfPerformance);
+			record.put("selfPerformance", MyNumberUtils.toFixedDecimal(selfPerformance, 2));
 
 			Map<String, Object> map = performanceMap.get(planSale.getMonthnum() + "_" + area);
 			if (map == null) {
 				map = new HashMap<>();
 				performanceMap.put(planSale.getMonthnum() + "_" + area, map);
 			}
-			map.put("groupPerformance", groupPerformance);
-			map.put("selfPerformance", MapUtils.getFloat(map, "selfPerformance", 0F) + selfPerformance);
+			// map.put("groupPerformance", groupPerformance);
+			// map.put("selfPerformance", MapUtils.getFloat(map,
+			// "selfPerformance", 0F) + selfPerformance);
+			map.put("groupPerformance", MyNumberUtils.toFixedDecimal(groupPerformance, 2));
+			map.put("selfPerformance",
+					MyNumberUtils.toFixedDecimal(MapUtils.getFloat(map, "selfPerformance", 0F) + selfPerformance, 2));
 
 			// 本月结余差旅和应酬(实际-预计)
-			record.put("thisMonthRemainSocialAmount", NumberUtils.toFloat(planSale.getSocialamount(), 0F)
-					- NumberUtils.toFloat(actuallySale.getSocialamount(), 0F));
-			record.put("thisMonthRemainAwayAmount", NumberUtils.toFloat(planSale.getAwayamount(), 0F)
-					- NumberUtils.toFloat(actuallySale.getAwayamount(), 0F));
+			record.put("thisMonthRemainSocialAmount",
+					MyNumberUtils.toFixedDecimal(NumberUtils.toFloat(planSale.getSocialamount(), 0F)
+							- NumberUtils.toFloat(actuallySale.getSocialamount(), 0F), 2));
+			record.put("thisMonthRemainAwayAmount",
+					MyNumberUtils.toFixedDecimal(NumberUtils.toFloat(planSale.getAwayamount(), 0F)
+							- NumberUtils.toFloat(actuallySale.getAwayamount(), 0F), 2));
 		}
 
 		// 处理经理绩效(团队绩效-所有销售绩效)
@@ -213,6 +227,7 @@ public class SaleUtils {
 			Float groupPerformance = MapUtils.getFloat(map, "groupPerformance", 0F);
 			Float selfPerformance = MapUtils.getFloat(map, "selfPerformance", 0F);
 			tMap.put("selfPerformance", groupPerformance - selfPerformance);
+			tMap.put("selfPerformance", MyNumberUtils.toFixedDecimal(groupPerformance - selfPerformance, 2));
 		}
 
 		return result;
@@ -276,11 +291,11 @@ public class SaleUtils {
 		return 0;
 	}
 
-	private static Object getPlanGroupSaleAmount(PlanSale planSale, PlanSaleService planSaleService) {
+	private static Float getPlanGroupSaleAmount(PlanSale planSale, PlanSaleService planSaleService) {
 		String saleusername = planSale.getSaleusername();
 		List<String> userSameAreaUsernames = MySystemUtils.getUserSameAreaUsernames(saleusername);
 		if (CollectionUtils.isEmpty(userSameAreaUsernames)) {
-			return 0;
+			return 0F;
 		}
 
 		List<Map<String, Object>> planGroupSaleAmounts = planSaleService.listPlanGroupSaleAmount(userSameAreaUsernames);
@@ -288,10 +303,10 @@ public class SaleUtils {
 			String yearnum = tmpMap.get("yearnum").toString();
 			String monthnum = tmpMap.get("monthnum").toString();
 			if (yearnum.equals(planSale.getYearnum()) && monthnum.equals(planSale.getMonthnum())) {
-				return tmpMap.get("saleamounts");
+				return NumberUtils.toFloat(tmpMap.get("saleamounts").toString(), 0F);
 			}
 		}
 
-		return 0;
+		return 0F;
 	}
 }
