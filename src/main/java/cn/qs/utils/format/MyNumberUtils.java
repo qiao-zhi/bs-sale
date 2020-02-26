@@ -16,7 +16,7 @@ public class MyNumberUtils {
 		numberFormat.setRoundingMode(RoundingMode.HALF_UP);
 		numberFormat.setMaximumFractionDigits(scale);
 
-		return numberFormat.format(value);
+		return numberFormat.format(value).replace(",", "");
 	}
 
 	public static String toFixedDecimalWithPercent(String value, int scale) {

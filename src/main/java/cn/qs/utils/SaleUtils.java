@@ -92,6 +92,8 @@ public class SaleUtils {
 
 		// 月份_区域 - (groupPerformance-团队绩效， selfPerformance - 个人绩效和)
 		Map<String, Map<String, Object>> performanceMap = new LinkedHashMap<>();
+		// 记录团建费用： 区域-团建费用
+		Map<String, Float> groupBuildCosts = new HashMap<>();
 
 		UserService userService = SpringBootUtils.getBean(UserService.class);
 		// 双层遍历做处理
@@ -166,7 +168,7 @@ public class SaleUtils {
 			Float actuallyGroupSaleAmountFloat = NumberUtils.toFloat(actuallyGroupSaleAmount.toString());
 			Float planGroupSaleAmountFloat = NumberUtils.toFloat(planGroupSaleAmount.toString(), 0.0F);
 			Float groupSaleRatio = 0F;
-			if (!planGroupSaleAmountFloat.equals(0.0)) {
+			if (planGroupSaleAmountFloat - 0F > 0) {
 				groupSaleRatio = actuallyGroupSaleAmountFloat / planGroupSaleAmountFloat;
 			}
 			record.put("groupSaleRatio", MyNumberUtils.toFixedDecimalWithPercent(groupSaleRatio, 2));
@@ -187,8 +189,11 @@ public class SaleUtils {
 
 			// 个人绩效金额（实际员工销售/实际团队销售*团队绩效金额*员工销售系数）
 			Float selaActuallySaleAmount = NumberUtils.toFloat(actuallySale.getSaleamount());
-			Float selfPerformance = selaActuallySaleAmount / actuallyGroupSaleAmountFloat * groupPerformance
-					* NumberUtils.toFloat(planSale.getRatio());
+			Float selfPerformance = 0F;
+			if (actuallyGroupSaleAmountFloat > 0) {
+				selfPerformance = selaActuallySaleAmount / actuallyGroupSaleAmountFloat * groupPerformance
+						* NumberUtils.toFloat(planSale.getRatio());
+			}
 			// record.put("selfPerformance", selfPerformance);
 			record.put("selfPerformance", MyNumberUtils.toFixedDecimal(selfPerformance, 2));
 
@@ -204,17 +209,24 @@ public class SaleUtils {
 			map.put("selfPerformance",
 					MyNumberUtils.toFixedDecimal(MapUtils.getFloat(map, "selfPerformance", 0F) + selfPerformance, 2));
 
-			// 本月结余差旅和应酬(实际-预计)
-			record.put("thisMonthRemainSocialAmount",
-					MyNumberUtils.toFixedDecimal(NumberUtils.toFloat(planSale.getSocialamount(), 0F)
-							- NumberUtils.toFloat(actuallySale.getSocialamount(), 0F), 2));
-			record.put("thisMonthRemainAwayAmount",
-					MyNumberUtils.toFixedDecimal(NumberUtils.toFloat(planSale.getAwayamount(), 0F)
-							- NumberUtils.toFloat(actuallySale.getAwayamount(), 0F), 2));
+			// 本月结余差旅和应酬(预计 - 实际)
+			Float thisMonthRemainSocialAmount = NumberUtils.toFloat(planSale.getSocialamount(), 0F)
+					- NumberUtils.toFloat(actuallySale.getSocialamount(), 0F);
+			record.put("thisMonthRemainSocialAmount", MyNumberUtils.toFixedDecimal(thisMonthRemainSocialAmount, 2));
+			Float thisMonthRemainAwayAmount = NumberUtils.toFloat(planSale.getAwayamount(), 0F)
+					- NumberUtils.toFloat(actuallySale.getAwayamount(), 0F);
+			record.put("thisMonthRemainAwayAmount", MyNumberUtils.toFixedDecimal(thisMonthRemainAwayAmount, 2));
+
+			Float groupBuildCost = MapUtils.getFloat(groupBuildCosts, area, 0F);
+			groupBuildCost += thisMonthRemainAwayAmount + thisMonthRemainSocialAmount;
+			groupBuildCosts.put(area, groupBuildCost);
 		}
 
 		// 处理经理绩效(团队绩效-所有销售绩效)
 		for (Map<String, Object> tMap : result) {
+			// 团建费用存进去
+			tMap.put("groupBuildCosts", groupBuildCosts.get(tMap.get("area")));
+
 			String saleusername = tMap.get("saleUsername").toString();
 			User findUserByUsername = SpringBootUtils.getBean(UserService.class).findUserByUsername(saleusername);
 			if (findUserByUsername == null || !DefaultValue.ROLE_LEADER.equals(findUserByUsername.getRoles())) {

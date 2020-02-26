@@ -1,4 +1,4 @@
-var pageUrl = "/saleCount/listPersonalCount.html";
+var pageUrl = "/saleCount/listGroupCount.html";
 
 $(function(){
 	queryFY();
@@ -20,9 +20,17 @@ function showTable(pageInfo) {
             +'<td>'+replaceNull(beans[i].saleFullname)+'</td>'
             +'<td>'+replaceNull(beans[i].planSaleAmount)+'</td>'
             +'<td>'+replaceNull(beans[i].actuallySaleAmount)+'</td>'
+            +'<td>'+replaceNull(beans[i].planAwayAmount)+'</td>'
+            +'<td>'+replaceNull(beans[i].actuallyAwayAmount)+'</td>'
+            +'<td>'+replaceNull(beans[i].planSocialAmount)+'</td>'
+            +'<td>'+replaceNull(beans[i].actuallySocialAmount)+'</td>'
             +'<td>'+replaceNull(beans[i].actuallyGroupSaleAmount) + "/" + replaceNull(beans[i].planGroupSaleAmount) +'</td>'
             +'<td>'+replaceNull(beans[i].groupSaleRatio)+'</td>'
+            +'<td>'+replaceNull(beans[i].groupPerformance)+'</td>'
             +'<td>'+replaceNull(beans[i].selfPerformance)+'</td>'
+            +'<td>'+replaceNull(beans[i].thisMonthRemainAwayAmount) + "/" + replaceNull(beans[i].lastMonthRemainAwayAmount) +'</td>'
+            +'<td>'+replaceNull(beans[i].thisMonthRemainSocialAmount) + "/" + replaceNull(beans[i].lastMonthRemainSocialAmount) +'</td>'
+            +'<td>'+replaceNull(beans[i].groupBuildCosts) + '</td>'
         	+ '</tr>';
         		
         $("#tbody").append(tr);

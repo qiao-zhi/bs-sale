@@ -163,13 +163,13 @@
                             <cite>业绩统计</cite>
                         </a>
                     </li >
-<!--                     <li>
+                     <li th:if="${session.user.roles} eq '系统管理员' or ${session.user.roles} eq '部门经理'">
                         <a _href="/saleCount/groupCount.html">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>团队统计</cite>
                         </a>
                     </li >
-                    <li>
+           <!--         <li>
                         <a _href="/saleCount/companyCount.html">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>公司统计</cite>

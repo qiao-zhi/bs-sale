@@ -17,7 +17,7 @@
     
     <!--自己写的JS  -->
     <script type="text/javascript" th:src="${#httpServletRequest.getContextPath()+'/static/x-admin/MyJs/PublicFunctions.js'}"></script>
-    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath()+'/static/x-admin/MyJs/planSale.js'}"></script>
+    <script type="text/javascript" th:src="${#httpServletRequest.getContextPath()+'/static/x-admin/MyJs/groupCount.js'}"></script>
     
     <span th:if="${session.user.roles} eq '系统管理员'">
     	<script>
@@ -43,10 +43,26 @@
           <!--隐藏当前页和页号-->
           <input type="hidden" name="pageNum"/>
           <input type="hidden" name="pageSize"/>
-<!--           <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input"/>
-          <button class="layui-btn" type="button" onclick="queryUsersFY()"><i class="layui-icon">&#xe615;</i></button>
-          <button class="layui-btn layui-btn-normal" type="button" onclick='clearQueryCondition(this)' title="点击重置查询条件"><i class="layui-icon">&#xe639;</i></button>
-           -->
+          
+          <div class="layui-form-item">
+	          <div class="layui-inline">
+		          <input type="text" name="saleusername"  placeholder="请输入销售用户名" autocomplete="off" class="layui-input"/>
+	       	  </div>
+	          <div class="layui-inline">
+		          <select name="yearnum">
+		       		<option th:each="year:${years}" th:selected="${currentYear eq year}" th:text="${year}" th:value="${year}"></option>
+		          </select>
+	       	  </div>
+	          <div class="layui-inline">
+		          <select name="monthnum">
+		       		<option th:each="month:${months}" th:selected="${currentMonth eq month.key}" th:text="${month.value}" th:value="${month.key}"></option>
+		       	  </select>
+	       	  </div>
+	          <div class="layui-inline">
+		          <button class="layui-btn" type="button" onclick="queryFY()"><i class="layui-icon">&#xe615;</i></button>
+		          <button class="layui-btn layui-btn-normal" type="button" onclick='clearQueryCondition(this)' title="点击重置查询条件"><i class="layui-icon">&#xe639;</i></button>
+	       	  </div>
+       	  </div>
         </form>
       </div>
       
@@ -54,16 +70,23 @@
         <thead>
           <tr>
             <th>序号</th>
-            <th>id</th>
+            <th>所属区域</th>
+            <th>年月</th>
             <th>销售用户名</th>
             <th>销售姓名</th>
-            <th>年度</th>
-            <th>月份</th>
-            <th>销售金额</th>
-            <th>应酬金额</th>
-            <th>出差金额</th>
-            <th>系数</th>
-            <th>操作</th>
+            <th>销售目标</th>
+            <th>实际销售</th>
+            <th>差旅预算</th>
+            <th>实际差旅</th>
+            <th>应酬预算</th>
+            <th>实际应酬</th>
+            <th>团队销售/团队预算</th>
+            <th>团队完成百分比</th>
+            <th>团队绩效金额</th>
+            <th>个人绩效</th>
+            <th>差旅本月累计/上月累计</th>
+            <th>应酬本月累计/上月累计</th>
+            <th>团建费用</th>
            </tr>
         </thead>
         <tbody id="tbody">
@@ -77,3 +100,9 @@
     </div>
   </body>
 </html>
+<script>
+	layui.use([ 'form', 'layer' ], function() {
+		var form = layui.form, layer = layui.layer;
+		form.render(); //更新全部
+	});
+</script>
